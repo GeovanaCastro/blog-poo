@@ -39,23 +39,32 @@ public class UsuarioService implements UserDetailsService {
         pendingUsers.put(usuario.getEmail(), usuario);
         
         String assunto = "Verification Code - DevDiaries";
-        String mensagem = String.format("Hello %s,\n\nYour verification code is: %s\n\nThanks for sing up in our blog!",
+        String mensagem = String.format("Hello %s,\n\nYour verification code is: %s\n\nThanks for sign up in our blog!",
                 usuario.getNome(), verificationCode);
         
         emailService.enviarEmail(usuario.getEmail(), assunto, mensagem);
     }
     
     public boolean verificarCodigo(String email, String codigo) {
-        String storedCode = verificationCodes.get(email);
-        if (storedCode != null && storedCode.equals(codigo)) {
-            Usuario usuario = pendingUsers.get(email);
-            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-            repository.save(usuario);
-            verificationCodes.remove(email);
-            pendingUsers.remove(email);
-            return true;
+          String storedCode = verificationCodes.get(email);
+    if (storedCode != null && storedCode.equals(codigo)) {
+        if (repository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already exists.");
         }
-        return false;
+        
+        Usuario usuario = pendingUsers.get(email);
+        
+        if (repository.findByUsername(usuario.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
+        
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        repository.save(usuario);
+        verificationCodes.remove(email);
+        pendingUsers.remove(email);
+        return true;
+    }
+    return false;
     }
 
     public Usuario editarUsuario(Usuario usuario) {

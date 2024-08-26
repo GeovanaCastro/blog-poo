@@ -10,6 +10,12 @@ import com.sendgrid.helpers.mail.objects.Email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import com.br.devdiaries.exception.EmailServiceException;
 
 @Service
 public class EmailService {
@@ -41,5 +47,13 @@ public class EmailService {
         } catch (IOException ex) {
             System.err.println("Error sending email: " + ex.getMessage());
         }
+    }
+    
+    @ExceptionHandler(EmailServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        public Map<String, String> handleEmailServiceException(EmailServiceException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
     }
 }

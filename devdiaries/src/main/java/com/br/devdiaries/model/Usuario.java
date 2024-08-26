@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -50,6 +51,7 @@ public class Usuario {
     private String senha;
     
     @NotBlank(message = "The telephone is mandatory!")
+    @Pattern(regexp = "^\\d{10,15}$", message = "The telephone must be numeric and have between 10 and 15 digits!")
     @Column(name = "telefone", length = 15, nullable = false)
     private String telefone;
 }

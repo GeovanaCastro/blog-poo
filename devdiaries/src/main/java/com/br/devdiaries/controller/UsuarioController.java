@@ -4,6 +4,7 @@ import com.br.devdiaries.dto.EmailVerificationRequest;
 import com.br.devdiaries.model.Usuario;
 import com.br.devdiaries.service.UsuarioService;
 import com.br.devdiaries.service.JwtService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,22 @@ public class UsuarioController {
     response.put("token", token);
     
     return ResponseEntity.ok(response);
+}
+    
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+        public Map<String, String> handleEntityNotFoundException(EntityNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
+}
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+        public Map<String, String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
 }
 
 
