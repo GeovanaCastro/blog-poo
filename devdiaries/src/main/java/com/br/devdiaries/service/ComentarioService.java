@@ -1,5 +1,8 @@
 package com.br.devdiaries.service;
 
+import com.br.devdiaries.exception.CommentNotFoundException;
+import com.br.devdiaries.exception.PostNotFoundException;
+import com.br.devdiaries.exception.UserNotFoundException;
 import com.br.devdiaries.model.Comentario;
 import com.br.devdiaries.model.Postagem;
 import com.br.devdiaries.model.Usuario;
@@ -25,8 +28,8 @@ public class ComentarioService {
     private IUsuario userRepository;
     
     public Comentario criarComentario(String conteudo, Integer postId, Integer userId, Integer parentCommentId) {
-        Postagem post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not find"));
-        Usuario user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not find"));
+        Postagem post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post not found with ID: " + postId));
+        Usuario user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
         Comentario parentComment = parentCommentId != null ? commentRepository.findById(parentCommentId).orElse(null) : null;
         
         Comentario comentario = new Comentario();
@@ -48,17 +51,22 @@ public class ComentarioService {
     }
     
     public Comentario editarComentario(Comentario comentario) {
+        if (!commentRepository.existsById(comentario.getId())) {
+            throw new CommentNotFoundException("Comment not found with Id: " + comentario.getId());
+        }
         return commentRepository.save(comentario);
     }
     
     public Comentario curtirComentario(Integer id) {
-        Comentario comentario = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+        Comentario comentario = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found with ID: " + id));
         comentario.setCurtidas(comentario.getCurtidas() + 1);
         return commentRepository.save(comentario);
     }
     
     public Comentario descurtirComentario(Integer id) {
-        Comentario comentario = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+        Comentario comentario = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found with ID: " + id));
         if (comentario.getCurtidas() != 0) {
             comentario.setCurtidas(comentario.getCurtidas() - 1);
         }
@@ -66,6 +74,9 @@ public class ComentarioService {
     }
     
     public Boolean deletarComentario(Integer id) {
+        if (!commentRepository.existsById(id)) {
+            throw new CommentNotFoundException("Comment not found with ID: "+ id);
+        }
         commentRepository.deleteById(id);
         return true;
     }

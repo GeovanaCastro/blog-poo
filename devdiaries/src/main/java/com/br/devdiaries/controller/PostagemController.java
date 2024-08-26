@@ -1,7 +1,6 @@
 package com.br.devdiaries.controller;
 
 import com.br.devdiaries.model.Postagem;
-import com.br.devdiaries.repository.IPostagem;
 import com.br.devdiaries.service.PostagemService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
@@ -34,44 +33,72 @@ public class PostagemController {
     
     @GetMapping
     public ResponseEntity<List<Postagem>> getAllPosts() {
-        List<Postagem> posts = postService.findAll();
-        return ResponseEntity.status(200).body(posts);
+        try {
+            List<Postagem> posts = postService.findAll();
+            return ResponseEntity.status(200).body(posts);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
     
     @GetMapping("/titulo/{titulo}")
     public  ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo) {
-        List<Postagem> posts = postService.findByTitulo(titulo);
-        return ResponseEntity.status(200).body(posts);
+        try {
+            List<Postagem> posts = postService.findByTitulo(titulo);
+            return ResponseEntity.status(200).body(posts);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
     
     @PostMapping
-    public ResponseEntity<Postagem> criarPost(@Valid @RequestBody Postagem postagem) {
-        Postagem resultado = postService.criarPostagem(postagem);
-        return ResponseEntity.status(201).body(resultado);
+    public ResponseEntity<?> criarPost(@Valid @RequestBody Postagem postagem) {
+        try {
+            Postagem resultado = postService.criarPostagem(postagem);
+            return ResponseEntity.status(201).body(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
     
     @PostMapping("/{postId}/curtir")
     public ResponseEntity<?> curtirPostagem(@PathVariable Integer postId) {
-        Postagem postagem = postService.curtirPostagem(postId);
-        return ResponseEntity.status(200).body(postagem);
+        try {
+            Postagem postagem = postService.curtirPostagem(postId);
+            return ResponseEntity.status(200).body(postagem);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
     
     @PostMapping("/{postId}/descurtir")
     public ResponseEntity<?> descurtirPostagem(@PathVariable Integer postId) {
-        Postagem postagem = postService.descurtirPostagem(postId);
-        return ResponseEntity.status(200).body(postagem);
+        try {
+            Postagem postagem = postService.descurtirPostagem(postId);
+            return ResponseEntity.status(200).body(postagem);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
     
     @PutMapping
-    public ResponseEntity<Postagem> editarPost(@Valid @RequestBody Postagem postagem) {
-        Postagem resultado = postService.editarPostagem(postagem);
-        return ResponseEntity.status(200).body(resultado);
+    public ResponseEntity<?> editarPost(@Valid @RequestBody Postagem postagem) {
+        try {
+            Postagem resultado = postService.editarPostagem(postagem);
+            return ResponseEntity.status(200).body(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarPost(@PathVariable Integer id) {
-        Boolean resultado = postService.deletarPostagem(id);
-        return ResponseEntity.status(204).body(resultado);
+        try {
+            Boolean resultado = postService.deletarPostagem(id);
+            return ResponseEntity.status(204).body(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
