@@ -64,7 +64,7 @@ public class UsuarioController {
                     @ExampleObject(
                         name = "User Example",
                         summary = "Example of a new user",
-                        value = "{ \"nome\": \"Yuri Holanda\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\", \"telefone\": \"85912345678\" }"
+                        value = "{ \"nome\": \"Yuri Holanda\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\" }"
                     )
                 }
             )
