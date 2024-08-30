@@ -120,12 +120,12 @@ public class UsuarioController {
                     @ExampleObject(
                         name = "User Example Before Editing",
                         summary = "Example user before edit",
-                        value = "{ \"nome\": \"Yuri Holanda\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\", \"telefone\": \"85912345678\" }"
+                        value = "{ \"nome\": \"Yuri Holanda\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\" }"
                     ),
 		    @ExampleObject(
 			name = "User Example After Editing",
 			summary = "Example user after edit",
-			value = "{ \"nome\": \"Yuri Albuquerque\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\", \"telefone\": \"85912345678\" }"
+			value = "{ \"nome\": \"Yuri Albuquerque\", \"username\": \"yuri_123\", \"email\": \"yuri2@example.com\", \"senha\": \"yuriSenha\" }"
                     )
                 }
             )

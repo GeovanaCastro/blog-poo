@@ -51,11 +51,6 @@ public class Usuario {
     @Column(name = "senha", columnDefinition = "TEXT", nullable = false)
     private String senha;
     
-    @NotBlank(message = "The telephone is mandatory!")
-    @Pattern(regexp = "^\\d{10,15}$", message = "The telephone must be numeric and have between 10 and 15 digits!")
-    @Column(name = "telefone", length = 15, nullable = false)
-    private String telefone;
-    
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 

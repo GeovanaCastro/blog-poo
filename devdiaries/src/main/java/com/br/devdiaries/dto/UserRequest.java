@@ -25,7 +25,4 @@ public class UserRequest {
     
     @Schema(description = "User's password", example = "yuriSenha")
     private String senha;
-
-    @Schema(description = "User's phone number", example = "85912345678")
-    private String telefone;
 }

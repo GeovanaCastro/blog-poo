@@ -41,6 +41,8 @@ public class SecurityConfig {
                     .requestMatchers("/usuarios/login").permitAll()
                     .requestMatchers("/usuarios/{id}").permitAll()
                     .requestMatchers("/usuarios/verificar").permitAll()
+                    .requestMatchers("/usuarios/esqueci-senha").permitAll()
+                    .requestMatchers("/usuarios/redefinir-senha").permitAll()
                     .requestMatchers("/posts").permitAll()
                     .requestMatchers("/posts/titulo/{titulo}").permitAll()
                     .requestMatchers("/posts/{postId}/curtir").permitAll()
