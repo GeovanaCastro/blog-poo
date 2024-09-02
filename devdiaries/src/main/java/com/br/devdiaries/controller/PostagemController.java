@@ -51,6 +51,16 @@ public class PostagemController {
         }
     }
     
+    @GetMapping("/tag/{tag}")
+    public ResponseEntity<List<Postagem>> getByTag (@PathVariable String nomeTag) {
+        try {
+            List<Postagem> posts = postService.findByTags_Nome(nomeTag);
+            return ResponseEntity.status(200).body(posts);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+    
     @PostMapping
     public ResponseEntity<?> criarPost(@Valid @RequestBody Postagem postagem) {
         try {

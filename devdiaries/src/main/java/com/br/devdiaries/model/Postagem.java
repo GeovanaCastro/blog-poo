@@ -6,11 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -36,7 +40,7 @@ public class Postagem {
     private String titulo;
     
     @NotBlank(message = "A content for yout post is a must!")
-    @Column(name = "conteudo", length = 450, nullable = false)
+    @Column(name = "conteudo", columnDefinition = "TEXT", nullable = false)
     private String conteudo;
     
     @Column(name = "curtidas")
@@ -48,6 +52,14 @@ public class Postagem {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario userId;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "postagens_tags",
+        joinColumns = @JoinColumn(name = "id_post"),
+        inverseJoinColumns = @JoinColumn(name = "id_tag")
+    )
+    private Set<Tag> tags = new HashSet<>();
     
     public int getId() {
         return this.id;

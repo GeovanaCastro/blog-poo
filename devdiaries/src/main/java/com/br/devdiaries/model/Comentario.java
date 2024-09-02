@@ -27,7 +27,7 @@ public class Comentario {
     private Integer id;
     
     @NotBlank(message = "Your comment needs to have some content!")
-    @Column(name = "conteudo", length = 500, nullable = false)
+    @Column(name = "conteudo", columnDefinition = "TEXT", nullable = false)
     private String conteudo;
     
     @Column(name = "comentado_em")

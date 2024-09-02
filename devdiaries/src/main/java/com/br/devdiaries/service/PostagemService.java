@@ -1,7 +1,10 @@
 package com.br.devdiaries.service;
 
+import com.br.devdiaries.exception.PostNotFoundException;
 import com.br.devdiaries.model.Postagem;
+import com.br.devdiaries.model.Tag;
 import com.br.devdiaries.repository.IPostagem;
+import com.br.devdiaries.repository.ITag;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,9 @@ public class PostagemService {
     
     @Autowired
     private IPostagem postRepository;
+    
+    @Autowired
+    private ITag tagRepository;
     
     public Postagem criarPostagem(Postagem postagem) {
         try {
@@ -85,6 +91,29 @@ public class PostagemService {
             throw new RuntimeException("Error fetching all posts. Please try again later.", e);
         }
     }
+    
+     public Postagem adicionarTagAoPost(Integer postId, String nomeTag) {
+        Postagem postagem = postRepository.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException("Post not found"));
+
+        Tag tag = tagRepository.findByNome(nomeTag)
+            .orElseGet(() -> {
+                Tag novaTag = new Tag();
+                novaTag.setNome(nomeTag);
+                return tagRepository.save(novaTag);
+            });
+
+        postagem.getTags().add(tag);
+        return postRepository.save(postagem);
+    }
+     
+     public List<Postagem> findByTags_Nome(String nomeTag) {
+         try {
+             return postRepository.findByTags_Nome(nomeTag);
+         } catch (Exception e) {
+             throw new RuntimeException("Error fetching posts by tag. Please try again later.");
+         }
+     }
     
     public Boolean deletarPostagem(Integer id) {
         try {

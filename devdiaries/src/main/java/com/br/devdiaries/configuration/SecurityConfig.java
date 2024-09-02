@@ -35,9 +35,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    // Permite acesso público ao endpoint de listar usuários
+                    // Permite acesso público aos endpoints
                     .requestMatchers("/usuarios").permitAll()
-                    // Permite acesso público ao endpoint de login
                     .requestMatchers("/usuarios/login").permitAll()
                     .requestMatchers("/usuarios/{id}").permitAll()
                     .requestMatchers("/usuarios/verificar").permitAll()
@@ -45,6 +44,7 @@ public class SecurityConfig {
                     .requestMatchers("/usuarios/redefinir-senha").permitAll()
                     .requestMatchers("/posts").permitAll()
                     .requestMatchers("/posts/titulo/{titulo}").permitAll()
+                    .requestMatchers("/posts/tag/{tag}").permitAll()
                     .requestMatchers("/posts/{postId}/curtir").permitAll()
                     .requestMatchers("/posts/{postId}/descurtir").permitAll()
                     .requestMatchers("/posts/{id}").permitAll()
@@ -52,9 +52,7 @@ public class SecurityConfig {
                     .requestMatchers("/comentarios/{id}/curtir").permitAll()
                     .requestMatchers("/comentarios/{id}/descurtir").permitAll()
                     .requestMatchers("/comentarios/{id}").permitAll()
-                    // Permite acesso à documentação da API
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                    // Qualquer outra requisição deve ser autenticada
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
