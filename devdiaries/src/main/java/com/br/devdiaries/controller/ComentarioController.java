@@ -44,18 +44,6 @@ public class ComentarioController {
         return ResponseEntity.status(HttpStatus.OK).body(comentarios);
     }
     
-    @PostMapping("/{id}/curtir")
-    public ResponseEntity<Comentario> curtirComentario(@PathVariable Integer id) {
-        Comentario comentarioCurtido = commentService.curtirComentario(id);
-        return ResponseEntity.status(HttpStatus.OK).body(comentarioCurtido);
-    }
-    
-    @PostMapping("/{id}/descurtir")
-    public ResponseEntity<Comentario> descurtirComentario(@PathVariable Integer id) {
-        Comentario comentarioDescurtido = commentService.descurtirComentario(id);
-        return ResponseEntity.status(HttpStatus.OK).body(comentarioDescurtido);
-    }
-    
     @PutMapping
     public ResponseEntity<Comentario> editarComentario(@RequestBody Comentario comentario) {
         Comentario comentarioEditado = commentService.editarComentario(comentario);

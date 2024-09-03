@@ -52,6 +52,13 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
         username = jwtService.extractUsername(jwt);
     }
     
+    // Verificar se o token está revogado antes de continuar a validação
+    if (jwt != null && usuarioService.isTokenRevoked(jwt)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Token is revoked");
+        return;
+    }
+    
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = this.usuarioService.loadUserByUsername(username);
         
@@ -67,4 +74,5 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
     filterChain.doFilter(request, response);
     }
 }
+
 

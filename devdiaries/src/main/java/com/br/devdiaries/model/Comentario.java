@@ -33,9 +33,6 @@ public class Comentario {
     @Column(name = "comentado_em")
     private LocalDateTime comentado_em;
     
-    @Column(name = "curtidas")
-    private int curtidas;
-    
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario user;
@@ -86,14 +83,6 @@ public class Comentario {
 
     public void setPost(Postagem post) {
         this.post = post;
-    }
-
-    public int getCurtidas() {
-        return curtidas;
-    }
-
-    public void setCurtidas(int curtidas) {
-        this.curtidas = curtidas;
     }
 
     public Comentario getParentComment() {

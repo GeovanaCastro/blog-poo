@@ -4,7 +4,9 @@ import com.br.devdiaries.dto.EmailVerificationRequest;
 import com.br.devdiaries.dto.LoginRequest;
 import com.br.devdiaries.dto.ResetPasswordRequest;
 import com.br.devdiaries.dto.UserRequest;
+import com.br.devdiaries.model.RevokedToken;
 import com.br.devdiaries.model.Usuario;
+import com.br.devdiaries.repository.IRevokedToken;
 import com.br.devdiaries.service.UsuarioService;
 import com.br.devdiaries.service.JwtService;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,11 +34,17 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/usuarios")
 public class UsuarioController {
+    
+    @Autowired
+    IRevokedToken revokedTokenRepository;
 
     private final UsuarioService usuarioService;
     private final JwtService jwtService;
@@ -276,6 +284,28 @@ public class UsuarioController {
     usuarioService.redefinirSenha(token, novaSenha);
     return ResponseEntity.ok().build();
 }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String token = jwtService.extractTokenFromRequest(request);
+    
+        if (token == null) {
+            return ResponseEntity.badRequest().body("Token not found.");
+        }
+    
+        // Extrair o username do token
+        String username = jwtService.extractUsername(token);
+    
+        if (jwtService.validateToken(token, username)) {
+            // Marcar o token como revogado no banco de dados
+            usuarioService.revokeToken(token);
+            return ResponseEntity.ok("Logout succesfull.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
+        }
+    }
+
+
 
     
     @ExceptionHandler(EntityNotFoundException.class)

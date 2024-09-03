@@ -57,22 +57,6 @@ public class ComentarioService {
         return commentRepository.save(comentario);
     }
     
-    public Comentario curtirComentario(Integer id) {
-        Comentario comentario = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with ID: " + id));
-        comentario.setCurtidas(comentario.getCurtidas() + 1);
-        return commentRepository.save(comentario);
-    }
-    
-    public Comentario descurtirComentario(Integer id) {
-        Comentario comentario = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with ID: " + id));
-        if (comentario.getCurtidas() != 0) {
-            comentario.setCurtidas(comentario.getCurtidas() - 1);
-        }
-        return commentRepository.save(comentario);
-    }
-    
     public Boolean deletarComentario(Integer id) {
         if (!commentRepository.existsById(id)) {
             throw new CommentNotFoundException("Comment not found with ID: "+ id);

@@ -1,15 +1,19 @@
 package com.br.devdiaries.service;
 
+import com.br.devdiaries.model.RevokedToken;
 import com.br.devdiaries.model.Usuario;
+import com.br.devdiaries.repository.IRevokedToken;
 import com.br.devdiaries.repository.IUsuario;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService implements UserDetailsService {
+    
+    @Autowired
+    IRevokedToken revokedTokenRepository;
 
     private final IUsuario repository;
     private final PasswordEncoder passwordEncoder;
@@ -34,6 +41,17 @@ public class UsuarioService implements UserDetailsService {
 
     public List<Usuario> listarUsuario() {
         return repository.findAll();
+    }
+    
+    public boolean isTokenRevoked(String token) {
+        return revokedTokenRepository.findByToken(token).isPresent();
+    }
+    
+     public void revokeToken(String token) {
+        RevokedToken revokedToken = new RevokedToken();
+        revokedToken.setToken(token); 
+        revokedToken.setRevokedAt(LocalDateTime.now());
+        revokedTokenRepository.save(revokedToken);
     }
     
     public void enviarCodigoVerificacao(Usuario usuario) {
