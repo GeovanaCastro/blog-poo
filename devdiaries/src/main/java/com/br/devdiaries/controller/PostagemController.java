@@ -1,7 +1,14 @@
 package com.br.devdiaries.controller;
 
+import com.br.devdiaries.dto.UserRequest;
+import com.br.devdiaries.exception.PostNotFoundException;
 import com.br.devdiaries.model.Postagem;
 import com.br.devdiaries.service.PostagemService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +38,7 @@ public class PostagemController {
     @Autowired
     private PostagemService postService;
     
+    //Endpoint de listagem de todas as postagens
     @GetMapping
     public ResponseEntity<List<Postagem>> getAllPosts() {
         try {
@@ -41,6 +49,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de procura de postagem pelo título
     @GetMapping("/titulo/{titulo}")
     public  ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo) {
         try {
@@ -51,6 +60,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de procura de postagem pela(s) tag(s)
     @GetMapping("/tag/{tag}")
     public ResponseEntity<List<Postagem>> getByTag (@PathVariable String nomeTag) {
         try {
@@ -61,6 +71,33 @@ public class PostagemController {
         }
     }
     
+    @Operation(
+            summary = "Create a new post",
+            description = "Creates a new post with the provided details",
+            responses = {
+                @ApiResponse(
+                responseCode = "201",
+                description = "Post created successfully",
+                content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Invalid input",
+                content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = @Content (mediaType = "application/json")
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "Post not found",
+                content = @Content (mediaType = "application/json")
+            )
+        }
+    )
+    //Endpoint de criação de postagem
     @PostMapping
     public ResponseEntity<?> criarPost(@Valid @RequestBody Postagem postagem) {
         try {
@@ -71,6 +108,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de curtir a postagem
     @PostMapping("/{postId}/curtir")
     public ResponseEntity<?> curtirPostagem(@PathVariable Integer postId) {
         try {
@@ -81,6 +119,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de descurtir a postagem
     @PostMapping("/{postId}/descurtir")
     public ResponseEntity<?> descurtirPostagem(@PathVariable Integer postId) {
         try {
@@ -91,6 +130,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de edição de postagem
     @PutMapping
     public ResponseEntity<?> editarPost(@Valid @RequestBody Postagem postagem) {
         try {
@@ -101,6 +141,7 @@ public class PostagemController {
         }
     }
     
+    //Endpoint de deletar postagem
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarPost(@PathVariable Integer id) {
         try {
@@ -111,6 +152,7 @@ public class PostagemController {
         }
     }
     
+    // Tratamento de exceções 400 BAD REQUEST
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
@@ -123,5 +165,18 @@ public class PostagemController {
             
         });
         return errors;
+    }
+    
+    // Tratamento de exceções 404 NOT FOUND
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<String> handlePostNotFoundException(PostNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    
+    // Tratamento de exceções genéricas (500)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericExceptions(Exception ex) {
+        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
  }

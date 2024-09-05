@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+//Entidade da tabela de tokens revogados no banco de dados
 @Entity
 public class RevokedToken {
     

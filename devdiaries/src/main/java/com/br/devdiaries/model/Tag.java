@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
+//Entidade da tabela de tags das postagens no banco de dados
 @Entity
 public class Tag {
     

@@ -20,20 +20,24 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    // Retorna a chave de assinatura decodificada do segredo JWT
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // Extrai o nome de usuário (subject) do token JWT
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+     // Extrai um determinado claim do token JWT usando uma função fornecida
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    // Extrai todos os claims do token JWT
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -42,11 +46,13 @@ public class JwtService {
                 .getBody();
     }
 
+    // Gera um token JWT usando o nome de usuário como subject
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
 
+    // Cria um token JWT com claims personalizados, subject, data de emissão e data de expiração
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -57,19 +63,23 @@ public class JwtService {
                 .compact();
     }
 
+    // Valida o token JWT verificando o nome de usuário e a expiração
     public boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
+    // Verifica se o token JWT está expirado
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    // Extrai a data de expiração do token JWT
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
     
+    // Extrai o token JWT do cabeçalho de autorização da requisição HTTP
     public String extractTokenFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

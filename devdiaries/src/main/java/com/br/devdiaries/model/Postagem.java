@@ -19,6 +19,7 @@ import lombok.Data;
 
 @Data
 
+//Entidade da tabela de postagens no banco de dados
 @Entity
 @Table(name = "posts")
 public class Postagem {

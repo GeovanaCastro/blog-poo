@@ -15,6 +15,7 @@ import lombok.Data;
 
 @Data
 
+//Entidade da tabela de usuários no banco de dados
 @Entity
 @Table(name = "usuarios")
 public class Usuario {

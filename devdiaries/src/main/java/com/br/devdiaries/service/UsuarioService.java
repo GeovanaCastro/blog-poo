@@ -39,14 +39,17 @@ public class UsuarioService implements UserDetailsService {
         this.emailService = emailService;
     }
 
+    //Método para listar todos os usuários
     public List<Usuario> listarUsuario() {
         return repository.findAll();
     }
     
+    //Verifica se o token é revogado
     public boolean isTokenRevoked(String token) {
         return revokedTokenRepository.findByToken(token).isPresent();
     }
     
+    //Revogar token
      public void revokeToken(String token) {
         RevokedToken revokedToken = new RevokedToken();
         revokedToken.setToken(token); 
@@ -54,6 +57,7 @@ public class UsuarioService implements UserDetailsService {
         revokedTokenRepository.save(revokedToken);
     }
     
+     //Método que envia código de verificação do email do usuário no ato de cadastro
     public void enviarCodigoVerificacao(Usuario usuario) {
         String verificationCode = String.valueOf(new Random().nextInt(900000) + 100000);
         verificationCodes.put(usuario.getEmail(), verificationCode);
@@ -66,6 +70,7 @@ public class UsuarioService implements UserDetailsService {
         emailService.enviarEmail(usuario.getEmail(), assunto, mensagem);
     }
     
+    //Método que verifica se o código que o usuário digitou é igual ao enviado por email e se for, cadastra o usuário
     public boolean verificarCodigo(String email, String codigo) {
           String storedCode = verificationCodes.get(email);
     if (storedCode != null && storedCode.equals(codigo)) {
@@ -88,17 +93,20 @@ public class UsuarioService implements UserDetailsService {
     return false;
     }
 
+    //Método de editar um usuário
     public Usuario editarUsuario(Usuario usuario) {
         String encoder = this.passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(encoder);
         return repository.save(usuario);
     }
 
+    //Método de excluir um usuário
     public Boolean excluirUsuario(Integer id) {
         repository.deleteById(id);
         return true;
     }
 
+    //Método para login, que valida a senha do usuário
     public Boolean validarSenha(String email, String rawPassword) {
     Usuario usuario = repository.findByEmail(email)
         .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -106,6 +114,7 @@ public class UsuarioService implements UserDetailsService {
     return passwordEncoder.matches(rawPassword, usuario.getSenha());
 }
     
+    //Método que solicita redefinição de senha, caso o usuário a tenha esquecido
     public void solicitarRedefinicaoSenha(String email) {
     Usuario usuario = repository.findByEmail(email)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -124,6 +133,7 @@ public class UsuarioService implements UserDetailsService {
     emailService.enviarEmail(usuario.getEmail(), assunto, mensagem);
 }
 
+    //Método de redefinição de senha
 public void redefinirSenha(String token, String novaSenha) {
     Usuario usuario = repository.findByResetPasswordToken(token)
             .orElseThrow(() -> new IllegalArgumentException("Invalid or expired password reset token."));

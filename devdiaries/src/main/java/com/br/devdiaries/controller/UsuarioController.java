@@ -54,6 +54,7 @@ public class UsuarioController {
         this.jwtService = jwtService;
     }
     
+    //Endpoint de listar usuários
     @GetMapping
     public ResponseEntity<List<Usuario>> listaUsuarios() {
         return ResponseEntity.status(200).body(usuarioService.listarUsuario());
@@ -100,12 +101,14 @@ public class UsuarioController {
             )
         }
     )
+    //Endpoint de cadastro de usuário
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@Valid @RequestBody Usuario usuario) {
         usuarioService.enviarCodigoVerificacao(usuario);
         return ResponseEntity.status(201).build();
     }
     
+    //Endpoint de verificação de código do cadastro do usuário
     @PostMapping("/verificar")
     public ResponseEntity<Void> verificarCodigo(@Valid @RequestBody EmailVerificationRequest request) {
         boolean verified = usuarioService.verificarCodigo(request.getEmail(), request.getVerificationCode());
@@ -161,11 +164,13 @@ public class UsuarioController {
             )
         }
     )
+    //Endpoint de edição de usuário
     @PutMapping
     public ResponseEntity<Usuario> editarUsuario(@Valid @RequestBody Usuario usuario) {
         return ResponseEntity.status(200).body(usuarioService.editarUsuario(usuario));
     }
 
+    //Endpoint de deletar usuário
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluirUsuario(@PathVariable Integer id) {
         usuarioService.excluirUsuario(id);
@@ -213,6 +218,7 @@ public class UsuarioController {
             )
         }
     )
+    //Endpoint de login do usuário
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody Map<String, String> loginRequest) {
     String email = loginRequest.get("email");
@@ -270,6 +276,7 @@ public class UsuarioController {
             )
         }
     )
+    //Endpoint de quando o usuário esquecer a senha
     @PostMapping("/esqueci-senha")
     public ResponseEntity<Void> solicitarRedefinicaoSenha(@RequestBody Map<String, String> request) {
     String email = request.get("email");
@@ -277,6 +284,7 @@ public class UsuarioController {
     return ResponseEntity.ok().build();
 }
 
+    //Endpoint de redefinição de senha
     @PostMapping("/redefinir-senha")
     public ResponseEntity<Void> redefinirSenha(@RequestBody Map<String, String> request) {
     String token = request.get("token");
@@ -285,6 +293,7 @@ public class UsuarioController {
     return ResponseEntity.ok().build();
 }
     
+    //Endpoint de logout do usuário
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         String token = jwtService.extractTokenFromRequest(request);
@@ -305,9 +314,7 @@ public class UsuarioController {
         }
     }
 
-
-
-    
+    // Tratamento de exceções 404 NOT FOUND
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
         public Map<String, String> handleEntityNotFoundException(EntityNotFoundException ex) {
@@ -316,6 +323,7 @@ public class UsuarioController {
         return error;
 }
 
+    // Tratamento de exceções 400 BAD REQUEST
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
         public Map<String, String> handleIllegalArgumentException(IllegalArgumentException ex) {
@@ -323,7 +331,6 @@ public class UsuarioController {
         error.put("error", ex.getMessage());
         return error;
 }
-
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -336,5 +343,11 @@ public class UsuarioController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+    
+    // Tratamento de exceções genéricas (500)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericExceptions(Exception ex) {
+        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

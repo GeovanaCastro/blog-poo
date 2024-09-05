@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+//Entidade da tabela de comentários no banco de dados
 @Entity
 @Table(name = "comentarios")
 public class Comentario {

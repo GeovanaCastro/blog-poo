@@ -27,6 +27,7 @@ public class ComentarioService {
     @Autowired
     private IUsuario userRepository;
     
+    //Método de criar comentário
     public Comentario criarComentario(String conteudo, Integer postId, Integer userId, Integer parentCommentId) {
         Postagem post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post not found with ID: " + postId));
         Usuario user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
@@ -42,14 +43,17 @@ public class ComentarioService {
         return commentRepository.save(comentario);
     }
     
+    //Método de procurar comentário pelo id
     public Optional<Comentario> getComentario(Integer id) {
         return commentRepository.findById(id);
     }
     
+    //Método que lista todos os comentários existentes
     public List<Comentario> findAll() {
         return commentRepository.findAll();
     }
     
+    //Método para editar comentário
     public Comentario editarComentario(Comentario comentario) {
         if (!commentRepository.existsById(comentario.getId())) {
             throw new CommentNotFoundException("Comment not found with Id: " + comentario.getId());
@@ -57,6 +61,7 @@ public class ComentarioService {
         return commentRepository.save(comentario);
     }
     
+    //Método para deletar comentário pelo id
     public Boolean deletarComentario(Integer id) {
         if (!commentRepository.existsById(id)) {
             throw new CommentNotFoundException("Comment not found with ID: "+ id);

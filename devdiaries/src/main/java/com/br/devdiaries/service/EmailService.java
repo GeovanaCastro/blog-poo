@@ -26,6 +26,7 @@ public class EmailService {
     @Value("${sendgrid.from.email}")
     private String fromEmail;
     
+    //Método para enviar email através do SendGrid
     public void enviarEmail(String para, String assunto, String mensagem) {
         Email from = new Email(fromEmail);
         Email to = new Email(para);
@@ -49,6 +50,7 @@ public class EmailService {
         }
     }
     
+    //Exception 500
     @ExceptionHandler(EmailServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         public Map<String, String> handleEmailServiceException(EmailServiceException ex) {

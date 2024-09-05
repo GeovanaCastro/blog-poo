@@ -32,7 +32,7 @@ public class PostagemService {
     public Postagem curtirPostagem(Integer postId) {
         try {
         Postagem postagem = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found!"));
+                .orElseThrow(() -> new PostNotFoundException("Post not found!"));
             postagem.setCurtidas(postagem.getCurtidas() + 1);
             return postRepository.save(postagem);
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class PostagemService {
     public Postagem descurtirPostagem(Integer postId) {
         try {
             Postagem postagem = postRepository.findById(postId)
-                    .orElseThrow(() -> new RuntimeException("Post not found!"));
+                    .orElseThrow(() -> new PostNotFoundException("Post not found!"));
             if (postagem.getCurtidas() > 0) {
                 postagem.setCurtidas(postagem.getCurtidas() - 1);
                 return postRepository.save(postagem);
