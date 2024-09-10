@@ -7,9 +7,7 @@ id integer auto_increment primary key,
 nome varchar(200) not null,
 username varchar(50) not null unique,
 email varchar(50) not null unique,
-senha text not null,
-reset_password_token varchar(255),
-reset_password_expiration timestamp
+senha text not null
 );
 
 create table posts (
@@ -34,7 +32,7 @@ foreign key (id_post) references posts(id) on delete cascade,
 foreign key (parent_comment_id) references comentarios(id) on delete cascade
 );
 
-create table tags (
+create table tag (
     id integer auto_increment primary key,
     nome varchar(50) not null unique
 );
@@ -44,12 +42,14 @@ create table postagens_tags (
     id_tag integer,
     primary key (id_post, id_tag),
     foreign key (id_post) references posts(id) on delete cascade,
-    foreign key (id_tag) references tags(id) on delete cascade
+    foreign key (id_tag) references tag(id) on delete cascade
 );
 
-create table revoked_tokens (
+create table revoked_token (
 id integer auto_increment primary key,
 token varchar(500) not null,
 revoked_at datetime default current_timestamp,
 expires_at datetime
 );
+
+insert into tag value(1, "teste");

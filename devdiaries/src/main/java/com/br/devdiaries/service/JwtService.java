@@ -78,7 +78,7 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-    
+
     // Extrai o token JWT do cabeçalho de autorização da requisição HTTP
     public String extractTokenFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -86,6 +86,5 @@ public class JwtService {
          return authorizationHeader.substring(7);
         }
         return null;
-}
-
+    }
 }

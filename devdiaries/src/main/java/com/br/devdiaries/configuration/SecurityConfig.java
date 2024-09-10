@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -39,13 +38,10 @@ public class SecurityConfig {
                     .requestMatchers("/usuarios").permitAll()
                     .requestMatchers("/usuarios/login").permitAll()
                     .requestMatchers("/usuarios/{id}").permitAll()
-                    .requestMatchers("/usuarios/verificar").permitAll()
-                    .requestMatchers("/usuarios/esqueci-senha").permitAll()
-                    .requestMatchers("/usuarios/redefinir-senha").permitAll()
                     .requestMatchers("/usuarios/logout").permitAll()
                     .requestMatchers("/posts").permitAll()
                     .requestMatchers("/posts/titulo/{titulo}").permitAll()
-                    .requestMatchers("/posts/tag/{tag}").permitAll()
+                    .requestMatchers("/posts/tag/{nomeTag}").permitAll()
                     .requestMatchers("/posts/{postId}/curtir").permitAll()
                     .requestMatchers("/posts/{postId}/descurtir").permitAll()
                     .requestMatchers("/posts/{id}").permitAll()
@@ -54,8 +50,8 @@ public class SecurityConfig {
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+           // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

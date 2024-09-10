@@ -6,9 +6,6 @@ import com.br.devdiaries.exception.PostNotFoundException;
 import com.br.devdiaries.exception.UserNotFoundException;
 import com.br.devdiaries.model.Comentario;
 import com.br.devdiaries.service.ComentarioService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,32 +30,7 @@ public class ComentarioController {
     @Autowired
     private ComentarioService commentService;
     
-    @Operation (
-            summary = "Create a new comment",
-            description = "Creates a new comment with the provided details",
-            responses = {
-                @ApiResponse(
-                responseCode = "201",
-                description = "Comment created successfully",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "400",
-                description = "Invalid input",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = @Content (mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "404",
-                description = "Comment not found",
-                content = @Content (mediaType = "application/json")
-            )
-        }
-    )
+    
     //Endpoint de criação de comentário
     @PostMapping
     public ResponseEntity<Comentario> criarComentario(@RequestBody CommentRequest commentRequest) {
@@ -76,32 +48,6 @@ public class ComentarioController {
         return ResponseEntity.status(HttpStatus.OK).body(comentarios);
     }
     
-    @Operation (
-            summary = "Edit a comment",
-            description = "Edits a comment with the provided details",
-            responses = {
-                @ApiResponse(
-                responseCode = "200",
-                description = "Comment edited successfully",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "400",
-                description = "Invalid input",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = @Content (mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "404",
-                description = "Comment not found",
-                content = @Content (mediaType = "application/json")
-            )
-        }
-    )
     //Endpoint de editar comentário
     @PutMapping
     public ResponseEntity<Comentario> editarComentario(@RequestBody Comentario comentario) {

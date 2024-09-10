@@ -9,13 +9,11 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
 import lombok.Data;
 
 
 @Data
 
-//Entidade da tabela de usuários no banco de dados
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -50,12 +48,4 @@ public class Usuario {
     @Size(min = 8, message = "The password must have at least 8 characters!")
     @Column(name = "senha", columnDefinition = "TEXT", nullable = false)
     private String senha;
-    
-    @Column(name = "reset_password_token")
-    private String resetPasswordToken;
-
-    @Column(name = "reset_password_expiration")
-    private LocalDateTime resetPasswordExpiration;
-
 }
-

@@ -1,14 +1,8 @@
 package com.br.devdiaries.controller;
 
-import com.br.devdiaries.dto.UserRequest;
 import com.br.devdiaries.exception.PostNotFoundException;
 import com.br.devdiaries.model.Postagem;
 import com.br.devdiaries.service.PostagemService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +55,7 @@ public class PostagemController {
     }
     
     //Endpoint de procura de postagem pela(s) tag(s)
-    @GetMapping("/tag/{tag}")
+    @GetMapping("/tag/{nomeTag}")
     public ResponseEntity<List<Postagem>> getByTag (@PathVariable String nomeTag) {
         try {
             List<Postagem> posts = postService.findByTags_Nome(nomeTag);
@@ -71,32 +65,6 @@ public class PostagemController {
         }
     }
     
-    @Operation(
-            summary = "Create a new post",
-            description = "Creates a new post with the provided details",
-            responses = {
-                @ApiResponse(
-                responseCode = "201",
-                description = "Post created successfully",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "400",
-                description = "Invalid input",
-                content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = @Content (mediaType = "application/json")
-            ),
-            @ApiResponse(
-                responseCode = "404",
-                description = "Post not found",
-                content = @Content (mediaType = "application/json")
-            )
-        }
-    )
     //Endpoint de criação de postagem
     @PostMapping
     public ResponseEntity<?> criarPost(@Valid @RequestBody Postagem postagem) {

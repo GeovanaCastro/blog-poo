@@ -41,7 +41,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
         filterChain.doFilter(request, response);
         return;
     }
-
+   
     final String authorizationHeader = request.getHeader("Authorization");
     
     String username = null;
